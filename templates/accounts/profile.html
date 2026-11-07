@@ -1,46 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}My profile{% endblock %}
+{% block title %}My Profile | CampusConnect{% endblock %}
 
 {% block content %}
-<div class="profile-page">
-  <div class="page-kicker"><span class="kicker-dot" aria-hidden="true"></span> ACCOUNT</div>
-  <h1 class="page-title">My profile</h1>
-  <p class="page-intro">Your details and cycle preferences.</p>
-  <hr class="page-divider">
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="auth-card">
+            <div class="mb-4">
+                <p class="text-uppercase text-muted mb-2" style="letter-spacing: 0.12em; font-size: 0.72rem;">Account</p>
+                <h2 class="h3 mb-0" style="letter-spacing: -0.04em; font-weight: 700;">My profile</h2>
+            </div>
 
-  <div class="profile-layout">
-    <section class="profile-overview" aria-labelledby="profile-details-heading">
-      <div class="profile-identity">
-        <div class="profile-avatar" aria-hidden="true">{{ user.username|first|upper }}</div>
-        <div>
-          <h2 class="profile-name">{{ user.get_full_name|default:user.username }}</h2>
-          <div class="profile-handle">@{{ user.username }}</div>
-        </div>
-      </div>
-      <h2 id="profile-details-heading" class="section-heading">Details</h2>
-      <dl class="profile-facts">
-        <div class="fact-row"><dt>Email</dt><dd>{{ user.email|default:"—" }}</dd></div>
-        <div class="fact-row"><dt>Cycle type</dt><dd>{{ object.get_cycle_type_display }}</dd></div>
-        <div class="fact-row"><dt>Cycle length</dt><dd>{{ object.cycle_length }} days</dd></div>
-        <div class="fact-row"><dt>Period length</dt><dd>{{ object.period_length }} days</dd></div>
-        <div class="fact-row"><dt>Reminder</dt><dd>{{ object.reminder_days }} day{{ object.reminder_days|pluralize }} before</dd></div>
-        <div class="fact-row"><dt>Member since</dt><dd>{{ user.date_joined|date:"M j, Y" }}</dd></div>
-      </dl>
-    </section>
+            <dl class="row gy-3 mb-4">
+                <dt class="col-sm-4 text-muted">Username</dt>
+                <dd class="col-sm-8 mb-0">{{ user.username }}</dd>
+                <dt class="col-sm-4 text-muted">Role</dt>
+                <dd class="col-sm-8 mb-0">{{ user.get_role_display }}</dd>
+                <dt class="col-sm-4 text-muted">Member since</dt>
+                <dd class="col-sm-8 mb-0">{{ user.date_joined|date:"M d, Y" }}</dd>
+            </dl>
 
-    <section class="profile-editor" aria-labelledby="edit-profile-heading">
-      <h2 id="edit-profile-heading" class="section-heading">Edit cycle preferences</h2>
-      <p class="section-copy">Keep your details and reminder settings up to date.</p>
-      <form method="post" novalidate>
-        {% csrf_token %}
-        {% include "includes/form_fields.html" with form=form %}
-        <div class="d-flex gap-2 pt-2">
-          <button type="submit" class="btn btn-cp px-4">Save changes</button>
-          <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancel</a>
+            <h3 class="h6 text-uppercase text-muted mb-3" style="letter-spacing: 0.12em; font-size: 0.72rem;">Edit your details</h3>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% include "includes/form_fields.html" %}
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="notion-btn primary">Save changes</button>
+                    <a href="{% url 'dashboard' %}" class="notion-btn secondary">Cancel</a>
+                </div>
+            </form>
         </div>
-      </form>
-    </section>
-  </div>
+    </div>
 </div>
 {% endblock %}

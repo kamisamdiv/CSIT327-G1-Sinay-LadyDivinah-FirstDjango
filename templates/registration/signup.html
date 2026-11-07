@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Sign up | CampusConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="auth-card">
+            <div class="text-center mb-4">
+                <p class="text-uppercase text-muted mb-2" style="letter-spacing: 0.12em; font-size: 0.72rem;">Create account</p>
+                <h2 class="h3 mb-0" style="letter-spacing: -0.04em; font-weight: 700;">Join CampusConnect</h2>
+            </div>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% include "includes/form_fields.html" %}
+                <button type="submit" class="notion-btn primary w-100 mt-2">Sign up</button>
+            </form>
+            <p class="text-center mt-3 mb-0 text-muted">
+                Already have an account? <a href="{% url 'login' %}" class="fw-semibold" style="color: var(--text);">Log in</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
