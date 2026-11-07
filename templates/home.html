@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="home-page">
+  <div class="page-kicker"><span class="kicker-dot" aria-hidden="true"></span> CYCLE PREPARATION</div>
+  {% if user.is_authenticated %}
+    <h1 class="page-title">Welcome back, {{ user.first_name|default:user.username }}.</h1>
+    <p class="page-intro">Your cycle plan, organized in one place.</p>
+    <hr class="page-divider">
+    <div class="home-grid">
+      <section class="home-section">
+        <h2 class="section-heading">Your cycle settings</h2>
+        <p class="section-copy">Your typical cycle is <strong>{{ user.profile.get_cycle_type_display|lower }}</strong>, about <strong>{{ user.profile.cycle_length }} days</strong> long, with a <strong>{{ user.profile.period_length }}-day</strong> period.</p>
+        <a href="{% url 'profile' %}" class="text-action">Review your settings <span aria-hidden="true">→</span></a>
+      </section>
+      <aside class="note-block">
+        <div class="note-label">YOUR REMINDER</div>
+        <div class="note-value">{{ user.profile.reminder_days }} day{{ user.profile.reminder_days|pluralize }} ahead</div>
+        <p class="note-copy">Your reminder is set to arrive before your expected cycle.</p>
+      </aside>
+    </div>
+  {% else %}
+    <h1 class="page-title">Feel a little more prepared.</h1>
+    <p class="page-intro">CyclePrep helps you keep your cycle settings and reminders together, so you can plan for what’s ahead.</p>
+    <hr class="page-divider">
+    <div class="home-grid">
+      <section class="home-section">
+        <h2 class="section-heading">A simple routine</h2>
+        <div class="step-list">
+          <div class="step-row"><span class="step-number">01</span><div><h3>Set your usual cycle</h3><p>Add your typical cycle and period length.</p></div></div>
+          <div class="step-row"><span class="step-number">02</span><div><h3>Choose a reminder</h3><p>Pick how many days ahead you’d like a heads-up.</p></div></div>
+          <div class="step-row"><span class="step-number">03</span><div><h3>Update it anytime</h3><p>Your profile keeps your settings easy to find.</p></div></div>
+        </div>
+      </section>
+      <aside class="note-block welcome-note">
+        <div class="note-label">GET STARTED</div>
+        <h2 class="note-heading">Make this space yours.</h2>
+        <p class="note-copy">Create an account to save your cycle settings and reminder preference.</p>
+        <a href="{% url 'signup' %}" class="btn btn-cp">Create an account</a>
+        <p class="signin-prompt">Already have an account? <a href="{% url 'login' %}" class="link-cp">Log in</a></p>
+      </aside>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

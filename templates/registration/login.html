@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="page-kicker"><span class="kicker-dot" aria-hidden="true"></span> YOUR CYCLE, YOUR WAY</div>
+  <h1 class="page-title">Welcome back</h1>
+  <p class="page-intro">Log in to see your cycle settings.</p>
+  <hr class="page-divider">
+  {% if request.GET.next and not user.is_authenticated %}
+    <div class="alert alert-info py-2">Please log in to continue.</div>
+  {% endif %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" with form=form %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="btn btn-cp px-4">Log in</button>
+  </form>
+  <p class="auth-switch">New to CyclePrep? <a href="{% url 'signup' %}" class="link-cp">Create an account</a></p>
+</div>
+{% endblock %}

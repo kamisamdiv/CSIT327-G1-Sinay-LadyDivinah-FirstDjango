@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CyclePrep{% endblock %} · CyclePrep</title>
+
+  <!-- Bootstrap 5 via CDN (no local Bootstrap files) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cp-red: #b5304f;
+      --cp-red-dark: #8f213d;
+      --cp-pink: #f4b3c0;
+      --cp-baby: #fde0e6;
+      --cp-canvas: #fff1f4;
+      --cp-ink: #33262a;
+      --cp-muted: #765f65;
+      --cp-line: #edcbd3;
+      --cp-paper: #fff;
+      --cp-sidebar: #f8dce3;
+    }
+    body {
+      background: var(--cp-canvas);
+      color: var(--cp-ink);
+      min-height: 100vh;
+      font-family: "DM Sans", "Segoe UI", sans-serif;
+    }
+    .workspace-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+    .workspace-sidebar {
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      width: 248px;
+      height: 100vh;
+      padding: 16px 12px;
+      border-right: 1px solid var(--cp-line);
+      background: var(--cp-sidebar);
+    }
+    .workspace-brand-row { display: flex; align-items: center; justify-content: space-between; min-height: 40px; margin-bottom: 26px; padding: 0 4px; }
+    .workspace-brand { color: var(--cp-ink); font-size: 15px; text-decoration: none; }
+    .workspace-brand:hover { color: var(--cp-ink); }
+    .brand-mark {
+      display: inline-grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      margin-right: 8px;
+      border-radius: 6px;
+      background: var(--cp-baby);
+      color: var(--cp-red);
+      font-size: 13px;
+      font-weight: 700;
+      vertical-align: -2px;
+    }
+    .sidebar-toggle { display: none; }
+    .sidebar-toggle .navbar-toggler-icon {
+      background-image: linear-gradient(#68595d 0 2px, transparent 2px 7px, #68595d 7px 9px, transparent 9px 14px, #68595d 14px 16px);
+      background-size: 18px 16px;
+    }
+    .workspace-navigation { display: flex; flex: 1; flex-direction: column; gap: 3px; }
+    .sidebar-label { margin: 0 10px 8px; color: #9a8d91; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 7px 10px;
+      border-radius: 5px;
+      color: #5f5659;
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .sidebar-link:hover { background: #f3c9d2; color: var(--cp-ink); }
+    .sidebar-link.active { background: #efbdc9; color: var(--cp-red-dark); font-weight: 600; }
+    .sidebar-link .nav-dot { width: 7px; height: 7px; margin-right: 10px; border: 1px solid #c9b9bd; border-radius: 50%; }
+    .sidebar-link.active .nav-dot { border-color: var(--cp-red); background: var(--cp-red); }
+    .sidebar-account { margin-top: auto; padding: 14px 8px 0; border-top: 1px solid var(--cp-line); }
+    .account-label { display: block; overflow: hidden; margin-bottom: 8px; color: var(--cp-muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    .workspace-main { display: flex; min-width: 0; flex-direction: column; }
+    .page-toolbar { display: flex; align-items: center; min-height: 52px; padding: 0 48px; border-bottom: 1px solid var(--cp-line); background: #fbe7eb; }
+    .breadcrumbs { color: #8d8285; font-size: 12px; }
+    .breadcrumbs a { color: inherit; text-decoration: none; }
+    .breadcrumbs a:hover { color: var(--cp-red-dark); }
+    .breadcrumbs span { margin: 0 8px; color: #c2b5b8; }
+    .workspace-content { width: min(100%, 1000px); flex: 1; margin: 0 auto; padding: 48px 48px 72px; }
+    .workspace-footer { width: min(100%, 1000px); margin: 0 auto; padding: 0 48px 24px; color: #9a8f92; font-size: 11px; }
+    .btn-cp { --bs-btn-color: #fff; --bs-btn-bg: var(--cp-red); --bs-btn-border-color: var(--cp-red);
+              --bs-btn-hover-color: #fff; --bs-btn-hover-bg: var(--cp-red-dark); --bs-btn-hover-border-color: var(--cp-red-dark);
+              --bs-btn-active-bg: var(--cp-red-dark); --bs-btn-active-border-color: var(--cp-red-dark);
+              --bs-btn-border-radius: 5px; --bs-btn-font-weight: 600; }
+    .text-cp, .link-cp { color: var(--cp-red); }
+    .link-cp:hover { color: var(--cp-red-dark); }
+    .form-label { color: #50474a; font-size: 13px; font-weight: 600; }
+    .form-control, .form-select { min-height: 40px; border-color: #e6dcde; border-radius: 5px; color: var(--cp-ink); font-size: 14px; }
+    .form-control:focus, .form-select:focus { border-color: #d98798; box-shadow: 0 0 0 .18rem rgba(184, 61, 85, .12); }
+    .form-text { color: var(--cp-muted); font-size: 12px; }
+    .alert { border: 0; border-radius: 5px; font-size: 13px; }
+    .app-messages { margin-bottom: 24px; }
+    .page-kicker { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; color: #8e7f83; font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .kicker-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cp-red); }
+    .page-title { margin: 0; color: var(--cp-red-dark); font-size: 36px; font-weight: 600; line-height: 1.2; }
+    .page-intro { max-width: 640px; margin: 12px 0 0; color: var(--cp-muted); font-size: 15px; line-height: 1.7; }
+    .page-divider { margin: 28px 0; border-color: var(--cp-line); opacity: 1; }
+    .home-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(220px, .8fr); gap: 56px; align-items: start; }
+    .section-heading { margin: 0 0 14px; color: var(--cp-ink); font-size: 15px; font-weight: 600; }
+    .section-copy { max-width: 540px; margin: 0 0 16px; color: #62595c; font-size: 14px; line-height: 1.8; }
+    .section-copy strong { color: var(--cp-ink); font-weight: 600; }
+    .text-action { display: inline-flex; align-items: center; gap: 8px; color: var(--cp-red-dark); font-size: 13px; font-weight: 600; text-decoration: none; }
+    .text-action:hover { color: var(--cp-red); }
+    .note-block { padding: 18px; border-left: 3px solid var(--cp-red); background: #f9dce3; }
+    .note-label { margin-bottom: 10px; color: #9b777f; font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .note-value { color: var(--cp-ink); font-size: 18px; font-weight: 600; }
+    .note-heading { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
+    .note-copy { margin: 8px 0 0; color: var(--cp-muted); font-size: 12px; line-height: 1.7; }
+    .welcome-note .btn { margin-top: 16px; }
+    .signin-prompt { margin: 14px 0 0; color: var(--cp-muted); font-size: 12px; }
+    .step-list { display: flex; flex-direction: column; }
+    .step-row { display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 12px 10px; border-bottom: 1px solid #edcbd3; background: #fff8f9; }
+    .step-row:first-child { padding-top: 0; }
+    .step-row:last-child { border-bottom: 0; }
+    .step-number { padding-top: 2px; color: #bd7d89; font-size: 11px; font-weight: 600; }
+    .step-row h3 { margin: 0 0 4px; font-size: 13px; font-weight: 600; }
+    .step-row p { margin: 0; color: var(--cp-muted); font-size: 12px; line-height: 1.6; }
+    .profile-layout { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr); gap: 40px; }
+    .profile-overview { padding-right: 32px; border-right: 1px solid var(--cp-line); }
+    .profile-identity { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+    .profile-avatar { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 7px; background: var(--cp-baby); color: var(--cp-red-dark); font-size: 17px; font-weight: 700; }
+    .profile-name { margin: 0 0 3px; font-size: 14px; font-weight: 600; }
+    .profile-handle { color: var(--cp-muted); font-size: 12px; }
+    .profile-facts { margin: 0; }
+    .fact-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1ebec; font-size: 12px; }
+    .fact-row dt { color: var(--cp-muted); font-weight: 400; }
+    .fact-row dd { margin: 0; color: #40383b; text-align: right; }
+    .profile-editor .section-copy { margin-bottom: 22px; }
+    .auth-page { max-width: 520px; }
+    .auth-switch { margin: 22px 0 0; color: var(--cp-muted); font-size: 13px; }
+    @media (max-width: 767.98px) {
+      .workspace-shell { display: flex; flex-direction: column; }
+      .workspace-sidebar { position: relative; width: 100%; height: auto; padding: 10px 16px; border-right: 0; border-bottom: 1px solid var(--cp-line); }
+      .workspace-brand-row { margin-bottom: 0; }
+      .sidebar-toggle { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; padding: 4px; border-color: var(--cp-line); }
+      .workspace-navigation.collapse:not(.show) { display: none; }
+      .workspace-navigation { padding: 14px 0 2px; }
+      .sidebar-account { margin-top: 12px; }
+      .page-toolbar { min-height: 44px; padding: 0 20px; }
+      .workspace-content { padding: 34px 20px 52px; }
+      .workspace-footer { padding: 0 20px 20px; }
+      .page-title { font-size: 30px; }
+      .home-grid, .profile-layout { grid-template-columns: 1fr; gap: 28px; }
+      .profile-overview { padding-right: 0; padding-bottom: 28px; border-right: 0; border-bottom: 1px solid var(--cp-line); }
+    }
+    @media (min-width: 768px) {
+      .workspace-navigation.collapse { display: flex !important; }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="workspace-shell">
+    <aside class="workspace-sidebar navbar-light" aria-label="CyclePrep navigation">
+      <div class="workspace-brand-row">
+        <a class="workspace-brand fw-semibold" href="{% url 'home' %}"><span class="brand-mark" aria-hidden="true">C</span>CyclePrep</a>
+        <button class="navbar-toggler sidebar-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+
+      <nav class="collapse workspace-navigation" id="mainNav" aria-label="Main">
+        <div class="sidebar-label">Cycle tracking</div>
+        <a class="sidebar-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+          <span class="nav-dot" aria-hidden="true"></span>Home
+        </a>
+        {% if user.is_authenticated %}
+          <a class="sidebar-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">
+            <span class="nav-dot" aria-hidden="true"></span>My profile
+          </a>
+        {% else %}
+          <div class="sidebar-label mt-4">Account</div>
+          <a class="sidebar-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">
+            <span class="nav-dot" aria-hidden="true"></span>Log in
+          </a>
+          <a class="sidebar-link {% if request.resolver_match.url_name == 'signup' %}active{% endif %}" href="{% url 'signup' %}">
+            <span class="nav-dot" aria-hidden="true"></span>Create account
+          </a>
+        {% endif %}
+      </nav>
+
+      {% if user.is_authenticated %}
+        <div class="sidebar-account">
+          <span class="account-label">{{ user.first_name|default:user.username }}</span>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-secondary btn-sm w-100">Log out</button>
+          </form>
+        </div>
+      {% endif %}
+    </aside>
+
+    <div class="workspace-main">
+      <header class="page-toolbar">
+        <div class="breadcrumbs"><a href="{% url 'home' %}">CyclePrep</a><span>/</span>{{ request.resolver_match.url_name|title }}</div>
+      </header>
+      <main class="workspace-content">
+        <div class="app-messages">
+          {% include "includes/messages.html" %}
+        </div>
+        {% block content %}{% endblock %}
+      </main>
+      <footer class="workspace-footer">CyclePrep gives a simple heads-up, not medical advice.</footer>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          crossorigin="anonymous"></script>
+</body>
+</html>
